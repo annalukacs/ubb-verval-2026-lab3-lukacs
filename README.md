@@ -30,4 +30,8 @@ A következő feladathoz fog kelleni egy JS/TS projekt. Lehet használni más ta
 
 ![alt text](image-2.png)
 
+![alt text](image-3.png)
+
 9. (3 pont) Elemezze a Sonar által talált hibákat. Válassza ki a legfontosabbnak ítélt problémát, javítsa ki, majd az újabb analízissel igazolja a javulást a dokumentációban. Egy screenshot-t ide a readme-be a hibáról a Sonar oldalán.
+
+![alt text](image-4.png)
