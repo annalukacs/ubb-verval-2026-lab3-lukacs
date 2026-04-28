@@ -1,0 +1,66 @@
+name: .NET build
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Java (required by Sonar scanner)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install .NET global tools
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Add dotnet tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Begin SonarCloud analysis
+        run: |
+          dotnet sonarscanner begin \
+            /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
+            /o:"${{ secrets.SONAR_ORG }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.opencover.reportsPaths="coverage/**/coverage.opencover.xml"
+
+      - name: Restore
+        run: dotnet restore VerVal.sln
+
+      - name: Build
+        run: dotnet build VerVal.sln --no-restore
+
+      - name: Test with coverage
+        run: dotnet test VerVal.sln --no-build --collect:"XPlat Code Coverage;Format=opencover" --results-directory coverage
+
+      - name: Generate HTML report
+        run: reportgenerator "-reports:coverage/**/coverage.opencover.xml" "-targetdir:coverage/report" "-reporttypes:Html"
+
+      - name: End SonarCloud analysis
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/report
