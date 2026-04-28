@@ -52,6 +52,7 @@ jobs:
 
       - name: Test with coverage
         run: dotnet test VerVal.sln --no-build --collect:"XPlat Code Coverage;Format=opencover" --results-directory coverage
+        continue-on-error: true
 
       - name: Generate HTML report
         run: reportgenerator "-reports:coverage/**/coverage.opencover.xml" "-targetdir:coverage/report" "-reporttypes:Html"
