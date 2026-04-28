@@ -34,4 +34,8 @@ A következő feladathoz fog kelleni egy JS/TS projekt. Lehet használni más ta
 
 9. (3 pont) Elemezze a Sonar által talált hibákat. Válassza ki a legfontosabbnak ítélt problémát, javítsa ki, majd az újabb analízissel igazolja a javulást a dokumentációban. Egy screenshot-t ide a readme-be a hibáról a Sonar oldalán.
 
+duplication problem
 ![alt text](image-4.png)
+
+duplication solved, security hotspots problem
+![alt text](image-5.png)
